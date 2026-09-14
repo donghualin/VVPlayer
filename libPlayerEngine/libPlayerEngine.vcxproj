@@ -99,11 +99,14 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\include\ffmpeg;$(ProjectDir)..\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/DLIBPLAYERENGINE_LIBRARY %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avcodec.lib;avformat.lib;avutil.lib;avfilter.lib;avdevice.lib;swresample.lib;swscale.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -113,11 +116,14 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\include\ffmpeg;$(ProjectDir)..\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/DLIBPLAYERENGINE_LIBRARY %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avcodec.lib;avformat.lib;avutil.lib;avfilter.lib;avdevice.lib;swresample.lib;swscale.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -127,11 +133,14 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>MaxSpeed</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\include\ffmpeg;$(ProjectDir)..\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/DLIBPLAYERENGINE_LIBRARY %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avcodec.lib;avformat.lib;avutil.lib;avfilter.lib;avdevice.lib;swresample.lib;swscale.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -141,11 +150,14 @@
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>MaxSpeed</Optimization>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\include\ffmpeg;$(ProjectDir)..\include\SDL2;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/DLIBPLAYERENGINE_LIBRARY %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>avcodec.lib;avformat.lib;avutil.lib;avfilter.lib;avdevice.lib;swresample.lib;swscale.lib;SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -153,10 +165,39 @@
     <Import Project="$(QtMsBuild)\qt.targets" />
   </ImportGroup>
   <ItemGroup>
+    <ClInclude Include="auto-run.hpp" />
+    <ClInclude Include="cmdutils.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="config_components.h" />
+    <ClInclude Include="decoderbase.h" />
+    <ClInclude Include="ffaudiodecoder.h" />
+    <ClInclude Include="ffdemuxer.h" />
+    <ClInclude Include="ffmediaengineImpl.h" />
+    <ClInclude Include="ffsubtitledecoder.h" />
+    <ClInclude Include="ffvideodecoder.h" />
+    <ClInclude Include="fopen_utf8.h" />
+    <ClInclude Include="frametypes.h" />
     <ClInclude Include="libPlayerEngine_global.h" />
     <ClInclude Include="IPlayerEngine.h" />
+    <ClInclude Include="mediaenginebase.h" />
+    <ClInclude Include="mediainterface.h" />
+    <ClInclude Include="medianotifylistener.h" />
+    <ClInclude Include="mediaplayertypes.h" />
+    <ClInclude Include="threadbase.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cmdutils.c" />
+    <ClCompile Include="decoderbase.cpp" />
+    <ClCompile Include="ffaudiodecoder.cpp" />
+    <ClCompile Include="ffdemuxer.cpp" />
+    <ClCompile Include="ffmediaengineImpl.cpp" />
+    <ClCompile Include="ffsubtitledecoder.cpp" />
+    <ClCompile Include="ffvideodecoder.cpp" />
+    <ClCompile Include="frametypes.cpp" />
+    <ClCompile Include="mediaenginebase.cpp" />
+    <ClCompile Include="mediainterface.cpp" />
     <ClCompile Include="PlayerEngine.cpp" />
+    <ClCompile Include="threadbase.cpp" />
   </ItemGroup>
 </Project>
