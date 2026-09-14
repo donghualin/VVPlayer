@@ -1,12 +1,13 @@
-#pragma once
+﻿#pragma once
 
 #include <string>
 #include <vector>
 #include <mutex>
 
+#include "libPlayerEngine_global.h"
 #include "medianotifylistener.h"
 
-class MediaEngineBase
+class LIBPLAYERENGINESHARED_EXPORT MediaEngineBase
 {
 public:
 	// 实现体可能位于另一个 DLL（legacy 引擎在 libFFMediaEngine.dll 内），
@@ -63,4 +64,7 @@ protected:
 private:
 	MediaNotifyListener* m_listener;
 };
+
+/// 工厂：创建媒体引擎实例（具体引擎在 DLL 内部实现，外部只持有 MediaEngineBase 接口）
+extern "C" LIBPLAYERENGINESHARED_EXPORT MediaEngineBase* createMediaEngine();
 

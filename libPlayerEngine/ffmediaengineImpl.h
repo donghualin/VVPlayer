@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "mediaenginebase.h"
 
 class MediaParameters;
@@ -42,7 +42,7 @@ protected:
 
 	void setSubtitleFile(const char* subtitlePath) override;
 
-	// ÄÚÇ¶×ÖÄ»¹ì²Ù×÷£¨½ö¶Ôº¬ÄÚÇ¶×ÖÄ»Á÷µÄÈİÆ÷ÓĞĞ§£©
+	// ï¿½ï¿½Ç¶ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½Ç¶ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ§ï¿½ï¿½
 	int getSubtitleTrackCount() const override;
 	int getCurrentSubtitleTrack() const override;
 	void switchSubtitleTrack(int trackIndex) override;
@@ -54,6 +54,11 @@ protected:
 	const char* getAudioDevice() const override;
 
 private:
+	// è§£ç åçš„è§†é¢‘å¸§ï¼ˆBGRAï¼‰ç”± FFDemuxer çš„åˆ·æ–°çº¿ç¨‹è½¬å¥½ï¼Œè¿™é‡Œç›´æ¥è½¬ç»™ä¸Šå±‚æ¸²æŸ“
+	void ensureDemuxer();
+
+private:
 	MediaParameters* m_parameters;
 	FFDemuxer* m_demutex;
+	bool m_opened;
 };
