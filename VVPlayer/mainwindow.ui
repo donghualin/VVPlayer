@@ -51,7 +51,7 @@
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: #2b2b2b;</string>
+      <string notr="true"/>
      </property>
      <layout class="QHBoxLayout" name="controlLayout">
       <property name="spacing">

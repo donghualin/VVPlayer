@@ -25,6 +25,8 @@ private slots:
 
 private:
     void initConnect();
+    void loadLastFile();
+    void saveLastFile(const QString& filePath);
 
 private:
     Ui::MainWindow ui;
