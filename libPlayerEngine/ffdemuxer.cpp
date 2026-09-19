@@ -1642,6 +1642,43 @@ void FFDemuxer::setVideoFrameCallback(std::function<void(const VideoData&)> call
     m_videoFrameCallback = callback;
 }
 
+void FFDemuxer::setProgressCallback(std::function<void(int64_t, int64_t)> callback)
+{
+    m_progressCallback = callback;
+}
+
+void FFDemuxer::seekToMs(int64_t positionMs)
+{
+    VideoState* is = m_videoState;
+    if (!is || !stream_ready || positionMs < 0)
+    {
+        return;
+    }
+    // 与 ffplay 一致：seek_pos 使用 AV_TIME_BASE（微秒）单位
+    stream_seek(is, positionMs * 1000, 0, 0);
+}
+
+int64_t FFDemuxer::currentPosMs()
+{
+    VideoState* is = m_videoState;
+    if (!is || !stream_ready)
+    {
+        return 0;
+    }
+    const double pos = get_master_clock(is);
+    if (isnan(pos) || pos < 0)
+    {
+        return 0;
+    }
+    return static_cast<int64_t>(pos * 1000.0);
+}
+
+int64_t FFDemuxer::durationMs() const
+{
+    const double d = duration_seconds.load();
+    return (d > 0 && !isnan(d)) ? static_cast<int64_t>(d * 1000.0) : 0;
+}
+
 void FFDemuxer::startVideoRefresh()
 {
     if (m_refreshing)
@@ -1671,6 +1708,8 @@ void FFDemuxer::videoRefreshLoop()
 {
     double remaining_time = 0.0;
     VideoState* is = nullptr;
+    // 进度上报节流：避免每个刷新节拍（约 10ms）都穿透回调
+    int64_t lastProgressUs = 0;
 
     while (m_refreshing)
     {
@@ -1678,6 +1717,21 @@ void FFDemuxer::videoRefreshLoop()
         if (!is)
         {
             break;
+        }
+
+        // 定位播放：周期性上报播放进度/总时长（暂停期间也保持上报，便于 UI 显示定位点）
+        if (m_progressCallback && stream_ready)
+        {
+            const int64_t nowUs = av_gettime_relative();
+            if (nowUs - lastProgressUs >= 200000)
+            {
+                lastProgressUs = nowUs;
+                const double pos = get_master_clock(is);
+                if (!isnan(pos))
+                {
+                    m_progressCallback(static_cast<int64_t>(pos * 1000.0), durationMs());
+                }
+            }
         }
 
         if (remaining_time > 0.0)

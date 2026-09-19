@@ -33,6 +33,20 @@ void FFMediaEngineImpl::ensureDemuxer()
 			listener()->onVideoFrame(data);
 		}
 	});
+	// 播放进度/总时长由 FFDemuxer 的刷新线程周期上报，转发给监听者
+	m_demutex->setProgressCallback([this](int64_t currentMs, int64_t totalMs)
+	{
+		if (!listener())
+		{
+			return;
+		}
+		if (totalMs != m_lastDurationMs)
+		{
+			m_lastDurationMs = totalMs;
+			listener()->onVideoDurationChanged(totalMs);
+		}
+		listener()->onPlaybackProgress(currentMs, totalMs);
+	});
 }
 
 bool FFMediaEngineImpl::openFile(const char* filePath)
@@ -117,6 +131,8 @@ void FFMediaEngineImpl::stop()
 		delete m_demutex;
 		m_demutex = nullptr;
 	}
+	// 复位时长记录，下一次播放时重新触发 onVideoDurationChanged
+	m_lastDurationMs = 0;
 }
 
 PlaybackState FFMediaEngineImpl::getState() const
@@ -175,16 +191,21 @@ float FFMediaEngineImpl::getSaturation() const
 
 void FFMediaEngineImpl::seekTo(int64_t positionMs)
 {
+	// 定位播放：交给 FFDemuxer 走 ffplay 的 seek 流程（read 线程响应 seek_req）
+	if (m_demutex)
+	{
+		m_demutex->seekToMs(positionMs);
+	}
 }
 
 int64_t FFMediaEngineImpl::getCurrentPosition() const
 {
-	return 0;
+	return m_demutex ? m_demutex->currentPosMs() : 0;
 }
 
 int64_t FFMediaEngineImpl::getDuration() const
 {
-	return 0;
+	return m_demutex ? m_demutex->durationMs() : 0;
 }
 
 int FFMediaEngineImpl::getAudioTrackCount() const

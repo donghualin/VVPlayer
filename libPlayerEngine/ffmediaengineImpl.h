@@ -61,4 +61,6 @@ private:
 	MediaParameters* m_parameters;
 	FFDemuxer* m_demutex;
 	bool m_opened;
+	// 最近一次上报的时长（仅被刷新线程访问），用于识别时长变化
+	int64_t m_lastDurationMs = 0;
 };

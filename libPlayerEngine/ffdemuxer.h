@@ -32,6 +32,15 @@ public:
 	/// 解码后的视频帧回调（BGRA，与 VideoRenderer::doRenderer 的输出一致）
 	void setVideoFrameCallback(std::function<void(const VideoData&)> callback);
 
+	/// 定位播放：跳转到指定毫秒位置（内部走 ffplay 的 stream_seek 流程）
+	void seekToMs(int64_t positionMs);
+	/// 当前播放位置（master clock，毫秒；未就绪返回 0）
+	int64_t currentPosMs();
+	/// 媒体总时长（毫秒；未知返回 0）
+	int64_t durationMs() const;
+	/// 播放进度回调（currentMs/totalMs），由视频刷新线程周期性触发，暂停期间也会保持触发
+	void setProgressCallback(std::function<void(int64_t, int64_t)> callback);
+
 protected:
 	/// 子类实现：每次循环调用，返回 true 继续，false 退出
 	bool run() override;
@@ -152,6 +161,7 @@ private:
 	double frame_pts_end = NAN;
 	double pts_pos = NAN;
 	std::function<void(const VideoData&)> m_videoFrameCallback;
+	std::function<void(int64_t, int64_t)> m_progressCallback;
 	std::thread m_refreshThread;
 	std::atomic<bool> m_refreshing{ false };
 	// 像素格式转换（BGRA），只被视频刷新线程访问
